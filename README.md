@@ -117,8 +117,7 @@ Clinical trial data comes from [ClinicalTrials.gov](https://clinicaltrials.gov/)
 ├── docs/
 │   ├── DATA_DICTIONARY.md
 │   ├── TABLEAU.md
-│   └── POWERBI.md
-├── powerbi/                       # Original Power BI report
+│   └── screenshots/
 └── tests/
 ```
 
@@ -140,10 +139,8 @@ pytest
 - **Overview** shows headline numbers, the screening funnel, open trials by phase, and candidates per patient.
 - **Before and After** compares the first version with this one, including what the first version's matches actually were.
 
+See [docs/TABLEAU.md](docs/TABLEAU.md) for how the workbook is built and published.
+
 ![Trial Scout dashboard](docs/screenshots/trial-scout.jpg)
 ![Overview dashboard](docs/screenshots/overview.jpg)
-![Before and After dashboard](docs/screenshots/before-and-after.jpg) See [docs/TABLEAU.md](docs/TABLEAU.md).
-
-## Power BI
-
-The original report is in `powerbi/`. It is not updated for this version: see [docs/POWERBI.md](docs/POWERBI.md) for the changes it needs.
+![Before and After dashboard](docs/screenshots/before-and-after.jpg)

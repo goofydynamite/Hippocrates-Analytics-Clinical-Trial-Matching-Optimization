@@ -15,7 +15,7 @@ One row per trial.
 | `interventions` | Listed interventions, separated by `\|` |
 | `age_criteria` | Age categories such as `ADULT, OLDER_ADULT` |
 | `locations` | Sites as `Facility, City, State, ZIP, Country`, separated by `\|` |
-| `eligibility_text` | Lowercase brief summary. The name is kept for Power BI; it does not hold eligibility criteria. |
+| `eligibility_text` | Lowercase brief summary. The name comes from the first version; it does not hold eligibility criteria. |
 | `study_url`, `sex`, `phases`, `study_type`, `enrollment`, `sponsor`, `last_update` | Copied from the source |
 | `eligibility_criteria`, `minimum_age`, `maximum_age` | Filled only by `fetch` |
 | `age_min`, `age_max` | Exact limits when fetched, otherwise derived from the age categories |

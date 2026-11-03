@@ -4,7 +4,7 @@ import pandas as pd
 
 from . import config, parsing
 
-# Original Power BI columns keep their names so the report's data model still loads.
+# The first version's column names are kept, so its matching rules (legacy.py) still run.
 RENAMES = {
     "NCT Number": "nct_id",
     "Study Title": "title",
