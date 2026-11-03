@@ -1,69 +1,149 @@
-# Hippocrates-Analytics-Clinical-Trial-Matching-Optimization
-Hippocrates Analytics: An end-to-end analytics project that matches patients to oncology clinical trials. Uses a Python (Pandas) engine to process real-world data and presents the results in an interactive Power BI dashboard, demonstrating a solution to a critical healthcare bottleneck.
-Hippocrates Analytics: Clinical Trial Matching Engine
-Live Dashboard: [Link to your published Power BI dashboard]
+# Hippocrates Analytics: Clinical Trial Matching
 
- Project Overview
-Hippocrates Analytics is a data analysis prototype designed to solve a critical bottleneck in healthcare: matching oncology patients with relevant clinical trials. Manually searching for trials is a time-consuming process for clinicians. This project automates that workflow by using a Python-based matching engine and a dynamic Power BI dashboard.
-The tool processes real-world clinical trial data from ClinicalTrials.gov and matches it against a dataset of mock patient profiles based on specific criteria like diagnosis, biomarkers, and age. The result is a powerful, interactive dashboard that allows users to instantly view potential trial matches for each patient, potentially reducing search time by over 95%.
-This project demonstrates a practical, end-to-end data analysis workflow, from data sourcing and cleaning to logical matching and professional-grade visualization.
+Hippocrates screens brain tumour patients against public ClinicalTrials.gov records and gives a clinician a short, ranked list of trials to review, with the reason for each match.
 
-Tech Stack
-Data Analysis:Python (Pandas)
-Data Sourcing: ClinicalTrials.gov (CSV Export)
-Data Visualization & Dashboard:** Microsoft Power BI
-Features
-Automated Matching Engine: A Python script that filters thousands of clinical trials based on complex rules (patient condition, biomarkers, age).
-Interactive Dashboard:A multi-page Power BI report that allows for deep-dive analysis and interactive filtering.
-Executive Summary Page: High-level KPIs for administrators, including total patients, total trials, and successful match rates.
-Patient Analysis Page: A detailed view of patient demographics and clinical data.
-Clinical Trial Scout Tool:The core feature of the dashboard—click on a patient to instantly see a list of their matched clinical trials.
+**Live dashboards on Tableau Public:** [Trial Scout](https://public.tableau.com/app/profile/deepti.singh.kushwaha/viz/HippocratesTrialScout/TrialScout) · [Overview](https://public.tableau.com/app/profile/deepti.singh.kushwaha/viz/HippocratesTrialScout/Overview) · [Before and After](https://public.tableau.com/app/profile/deepti.singh.kushwaha/viz/HippocratesTrialScout/BeforeandAfter)
 
--‘
- How to Run This Project
-To run this project on your local machine, follow these steps:
- Prerequisites
-Python 3.x installed
- Pandas library installed (`pip install pandas`)
- Microsoft Power BI Desktop installed
+> **Demonstration project.** All patients are synthetic, and `AI_Predicted_Condition` is randomly generated: no imaging model is included. A match is a candidate for clinician review, not a finding of eligibility or a treatment recommendation. The rules have not been validated against clinician decisions.
 
-Setup
-1.  Clone the repository:
-    ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    ```
-2.  Navigate to the project directory:
-    ```bash
-    cd your-repo-name
-    ```
-3.  Download the Clinical Trial Data:
-    Go to [ClinicalTrials.gov](https://classic.clinicaltrials.gov/ct2/search) and search for recruiting trials (e.g., for "Glioblastoma" in the "United States").
-     Download the results as a CSV and save it in the project folder.
-4.  Run the Python Scripts:
-    First, clean the downloaded trial data:
-        ```bash
-        python clean_trials_data.py
-        ```
-     Next, generate the mock patient data:
-        ```bash
-        python create_patients.py
-        ```
-    Finally, run the matching engine:
-        ```bash
-        python trial_matcher.py
-        ```
-5.  View the Dashboard:
-    * Open the `Hippocrates_Dashboard.pbix` file in Power BI Desktop.
-    * Click "Refresh" on the Home ribbon to load all the newly generated CSV data.
+## Results
 
+From a ClinicalTrials.gov download of 2,675 glioblastoma, astrocytoma and meningioma studies, updated to 2026-10-30, of which 540 are open, for 20 synthetic patients:
 
-Project Structure
-├── Hippocrates_Dashboard.pbix         # The Power BI dashboard file
-├── create_patients.py                 # Script to generate mock patient data
-├── clean_trials_data.py               # Script to clean the raw clinical trial data
-├── trial_matcher.py                   # The core matching engine script
-├── patient_diagnostics_mock.csv       # (Generated) Mock patient data
-├── cleaned_clinical_trials.csv        # (Generated) Cleaned trial data
-├── successful_matches.csv             # (Generated) Final patient-trial matches
-└── README.md                          # This README file
+| Measure | First version | Current version |
+|---|---|---|
+| Matches | 9,602 | 1,422 |
+| Trials a patient could still join | 24.4% | 100% |
+| Registered age limits checked | No | Yes |
+| EGFR, IDH and MGMT conflicts excluded | No | Yes |
+| Site in the patient's country required | No | Yes |
+| Ranked, with reasons | No | Yes |
+| Automated tests | 0 | 157 |
 
+Both columns screen the same patients against the same data. 247 matches rate Strong, and 16 of the 20 patients have at least one. Every patient has between 22 and 168 candidates. The current version also finds 660 candidates the first version missed, mainly because the old EGFR rule hid every trial that didn't mention EGFR from EGFR-positive patients.
+
+## Quick start
+
+Requires Python 3.10 or later.
+
+```bash
+pip install -r requirements.txt
+```
+
+```bash
+python -m hippocrates run
+```
+
+Then open `dashboard/index.html` in a browser. It is one self-contained file with three views: **Trial Scout**, **Overview** and **Method**.
+
+Output is reproducible: the same inputs and seed give identical files.
+
+| Command | Purpose |
+|---|---|
+| `python -m hippocrates run` | Clean, generate patients, match, and build the dashboard |
+| `python -m hippocrates clean` | Clean the raw trial export |
+| `python -m hippocrates patients --count 20 --seed 42` | Generate synthetic patients |
+| `python -m hippocrates match` | Match patients to trials |
+| `python -m hippocrates dashboard` | Rebuild the dashboard |
+| `python -m hippocrates fetch` | Download current studies, including full eligibility criteria |
+
+## How matching works
+
+A trial must pass every gate, in order. Each exclusion is counted per patient in `match_funnel.csv`.
+
+| Gate | A trial passes when |
+|---|---|
+| Condition | The patient's tumour, or a broader family that includes it, is listed. Synonyms such as GBM and gliosarcoma count. |
+| Status | It is recruiting, not yet recruiting, by invitation, or available as expanded access. |
+| Age | The patient is inside the registered age range and any limit stated in the summary. |
+| Sex | The patient fits any sex restriction. |
+| Biomarker | EGFR, IDH and MGMT status do not conflict with what the trial selects for. Untested markers never exclude. |
+| Disease setting | Newly diagnosed or recurrent trials take only matching patients. |
+| Geography | It has a site in the patient's country, or lists no sites yet. |
+
+Passing trials are scored out of 100:
+
+| Dimension | Points |
+|---|---|
+| Condition | 35 exact, 18 broader family |
+| Geography | 25 same city, 18 same state, 10 same country, 5 no site listed |
+| Biomarker | 20 specific fit, 8 neutral |
+| Recruitment status | 5 to 10 |
+| Disease setting | 5 specified and matching, 2 otherwise |
+| Study design | 5 interventional, 2 otherwise |
+
+Records not updated for over two years lose 5 points. Strong is 75 or more, Good is 55 to 74, and Possible is below 55. All of these values are in [config.py](hippocrates/config.py).
+
+## Limitations
+
+- **Eligibility criteria:** inclusion criteria add a biomarker or disease-setting rule only when one clause states it plainly, so unclear wording leaves a trial open for review. Exclusion criteria are not assessed.
+- **Free text:** these rules can still miss or misread a requirement. For example, NCT03175224 is treated as EGFR-selected because it lists "EGFR Gene Mutation" as a condition.
+- **Distance:** sites are grouped by city, state and country, not measured.
+- **Not assessed:** performance status, prior treatment, tumour volume, organ function and comorbidities.
+- **Data age:** statuses are only as current as the last `fetch`.
+
+## Updating the data
+
+```bash
+python -m hippocrates fetch
+```
+
+```bash
+python -m hippocrates run
+```
+
+`fetch` writes `data/raw/ctgov_api_studies.csv`, with full inclusion criteria, exact age limits and open sites where the API reports them. `clean` prefers that file. Delete it to go back to the smaller 2025 CSV export, `glioblastoma_search_results.csv`, which has none of those.
+
+Clinical trial data comes from [ClinicalTrials.gov](https://clinicaltrials.gov/), through the [API v2](https://clinicaltrials.gov/data-api/api).
+
+## Project structure
+
+```text
+├── hippocrates/
+│   ├── config.py                  # Paths, taxonomy, scoring and tiers
+│   ├── parsing.py                 # Age, site, biomarker and setting extraction
+│   ├── clean.py                   # Raw export to trial table
+│   ├── patients.py                # Seeded synthetic patients
+│   ├── matching.py                # Gates, scoring and ranking
+│   ├── fetch.py                   # ClinicalTrials.gov API client
+│   ├── dashboard.py               # Builds the HTML dashboard
+│   ├── tableau.py                 # Builds the Tableau workbook and extracts
+│   └── dashboard_template.html
+├── data/
+│   ├── raw/                       # ClinicalTrials.gov download and 2025 export
+│   └── processed/                 # Generated tables
+├── dashboard/index.html           # Generated HTML dashboard
+├── tableau/                       # Generated Tableau workbook and extracts
+├── docs/
+│   ├── DATA_DICTIONARY.md
+│   ├── TABLEAU.md
+│   └── POWERBI.md
+├── powerbi/                       # Original Power BI report
+└── tests/
+```
+
+Run the tests with:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+```bash
+pytest
+```
+
+## Tableau
+
+`python -m hippocrates run` also writes a Tableau Public workbook to `tableau/`, with its data as `.hyper` extracts. It has three dashboards:
+
+- **Trial Scout** shows the selected patient's headline numbers, then ranks their candidate trials with the reasons for each. It has Tier and Distance filters, links to ClinicalTrials.gov, and a map of trial sites.
+- **Overview** shows headline numbers, the screening funnel, open trials by phase, and candidates per patient.
+- **Before and After** compares the first version with this one, including what the first version's matches actually were.
+
+![Trial Scout dashboard](docs/screenshots/trial-scout.jpg)
+![Overview dashboard](docs/screenshots/overview.jpg)
+![Before and After dashboard](docs/screenshots/before-and-after.jpg) See [docs/TABLEAU.md](docs/TABLEAU.md).
+
+## Power BI
+
+The original report is in `powerbi/`. It is not updated for this version: see [docs/POWERBI.md](docs/POWERBI.md) for the changes it needs.
