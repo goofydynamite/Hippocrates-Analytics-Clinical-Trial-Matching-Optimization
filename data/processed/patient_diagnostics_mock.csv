@@ -1,0 +1,21 @@
+Patient_ID,AI_Predicted_Condition,Biomarker_EGFR,Tumor_Volume_mm3,Patient_Age,Patient_Location,Patient_Sex,Biomarker_IDH,Biomarker_MGMT,Disease_Setting
+PID-001,Astrocytoma,Positive,4537,52,"Houston, TX",Female,Mutant,Methylated,Newly Diagnosed
+PID-002,Astrocytoma,Positive,3918,62,"New York, NY",Female,Mutant,Methylated,Newly Diagnosed
+PID-003,Glioblastoma,Positive,3798,47,"Los Angeles, CA",Male,Wildtype,Methylated,Recurrent
+PID-004,Astrocytoma,Positive,4608,45,"Philadelphia, PA",Male,Mutant,Unmethylated,Newly Diagnosed
+PID-005,Glioblastoma,Negative,1918,40,"Philadelphia, PA",Female,Wildtype,Unmethylated,Recurrent
+PID-006,Astrocytoma,Positive,4488,64,"Los Angeles, CA",Female,Mutant,Unmethylated,Newly Diagnosed
+PID-007,Astrocytoma,Negative,3864,47,"New York, NY",Female,Mutant,Methylated,Recurrent
+PID-008,Meningioma,Not Tested,2453,41,"Philadelphia, PA",Male,Not Tested,Not Tested,Recurrent
+PID-009,Astrocytoma,Negative,2166,58,"Chicago, IL",Female,Mutant,Unmethylated,Newly Diagnosed
+PID-010,Astrocytoma,Positive,3687,50,"Houston, TX",Male,Mutant,Unmethylated,Recurrent
+PID-011,Meningioma,Not Tested,4121,70,"Houston, TX",Male,Not Tested,Not Tested,Newly Diagnosed
+PID-012,Glioblastoma,Positive,4797,55,"Philadelphia, PA",Male,Wildtype,Methylated,Newly Diagnosed
+PID-013,Meningioma,Not Tested,3823,55,"Houston, TX",Male,Not Tested,Not Tested,Recurrent
+PID-014,Meningioma,Not Tested,4133,64,"Houston, TX",Male,Not Tested,Not Tested,Newly Diagnosed
+PID-015,Glioblastoma,Negative,4559,72,"Philadelphia, PA",Male,Wildtype,Unmethylated,Newly Diagnosed
+PID-016,Meningioma,Not Tested,2066,67,"Philadelphia, PA",Female,Not Tested,Not Tested,Newly Diagnosed
+PID-017,Meningioma,Not Tested,2126,75,"Houston, TX",Male,Not Tested,Not Tested,Newly Diagnosed
+PID-018,Glioblastoma,Negative,3667,51,"Los Angeles, CA",Female,Wildtype,Methylated,Recurrent
+PID-019,Meningioma,Not Tested,2893,42,"Chicago, IL",Male,Not Tested,Not Tested,Newly Diagnosed
+PID-020,Glioblastoma,Negative,3550,46,"Los Angeles, CA",Female,Wildtype,Unmethylated,Newly Diagnosed
