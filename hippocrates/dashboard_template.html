@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hippocrates Trial Scout</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #6f6d68;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,.10); --wash: #f0efec;
+  --accent: #256abf; --accent-ink: #ffffff; --warn-ink: #7a4d00; --warn-wash: #fdf1d8;
+  --tier-strong: #184f95; --tier-good: #3987e5; --tier-possible: #86b6ef;
+  --tier-strong-ink: #ffffff; --tier-good-ink: #ffffff; --tier-possible-ink: #0b0b0b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #a09e96;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,.10); --wash: #262624;
+    --accent: #5598e7; --accent-ink: #0b0b0b; --warn-ink: #fab219; --warn-wash: #33290f;
+    --tier-strong: #86b6ef; --tier-good: #3987e5; --tier-possible: #184f95;
+    --tier-strong-ink: #0b0b0b; --tier-good-ink: #ffffff; --tier-possible-ink: #ffffff;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -.01em; }
+h2 { font-size: 17px; margin: 0 0 4px; }
+h3 { font-size: 15px; margin: 0; font-weight: 600; }
+p { margin: 0; }
+.sub { color: var(--ink-2); font-size: 14px; }
+.notice { margin: 14px 0 18px; padding: 10px 14px; border-radius: 8px; background: var(--warn-wash);
+  color: var(--ink); font-size: 14px; }
+.notice strong { color: var(--warn-ink); }
+nav { display: flex; gap: 4px; border-bottom: 1px solid var(--grid); margin-bottom: 20px; }
+nav button { all: unset; cursor: pointer; padding: 8px 14px; color: var(--ink-2); font-weight: 500;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; }
+nav button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+button:focus-visible, a:focus-visible, select:focus-visible, rect:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.scout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 18px; align-items: start; }
+.patients { padding: 8px; max-height: 76vh; overflow-y: auto; }
+.patient-btn { all: unset; box-sizing: border-box; display: flex; width: 100%; justify-content: space-between;
+  gap: 8px; cursor: pointer; padding: 8px 10px; border-radius: 6px; }
+.patient-btn:hover { background: var(--wash); }
+.patient-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.patient-btn[aria-pressed="true"] small { color: inherit; }
+.patient-btn b { font-weight: 600; font-size: 14px; display: block; }
+.patient-btn small { color: var(--ink-2); font-size: 12.5px; }
+.patient-btn .n { font-variant-numeric: tabular-nums; align-self: center; font-size: 13px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 10px; }
+.facts div { font-size: 14px; }
+.facts span { display: block; color: var(--muted); font-size: 12.5px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 16px 0 10px; }
+.controls label { font-size: 13.5px; color: var(--ink-2); display: inline-flex; gap: 6px; align-items: center; }
+select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--axis); border-radius: 6px; padding: 4px 8px; }
+.count { margin-left: auto; color: var(--ink-2); font-size: 13.5px; }
+.trial { border-top: 1px solid var(--grid); padding: 14px 0; display: grid;
+  grid-template-columns: 54px minmax(0, 1fr); gap: 14px; }
+.trial:last-child { padding-bottom: 0; }
+.score { font-size: 22px; font-weight: 600; line-height: 1.1; text-align: center; }
+.score small { display: block; font-size: 11.5px; font-weight: 500; color: var(--ink-2); margin-top: 3px; }
+.trial h3 a { color: var(--ink); text-decoration: none; }
+.trial h3 a:hover { text-decoration: underline; color: var(--accent); }
+.meta { color: var(--ink-2); font-size: 13px; margin: 3px 0 7px; overflow-wrap: anywhere; }
+ul.why { list-style: none; margin: 0; padding: 0; font-size: 13.5px; }
+ul.why li { padding-left: 18px; position: relative; }
+ul.why li::before { position: absolute; left: 2px; font-weight: 700; }
+li.reason::before { content: "✓"; color: var(--accent); }
+li.flag::before { content: "!"; color: var(--warn-ink); left: 5px; }
+li.flag { color: var(--ink-2); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.tile b { display: block; font-size: 28px; font-weight: 600; line-height: 1.2; }
+.tile span { color: var(--ink-2); font-size: 13.5px; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 8px 0; color: var(--ink-2); font-size: 13px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+svg { display: block; width: 100%; height: auto; }
+svg text { font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink-2); }
+svg text.val { fill: var(--ink); font-variant-numeric: tabular-nums; }
+#tip { position: fixed; z-index: 5; pointer-events: none; display: none; padding: 7px 10px; border-radius: 6px;
+  font-size: 13px; background: var(--ink); color: var(--page); max-width: 260px; }
+details { margin-top: 10px; font-size: 13.5px; color: var(--ink-2); }
+summary { cursor: pointer; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13.5px; }
+th, td { text-align: left; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--grid); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.compare { margin-top: 18px; }
+.method h2 { margin-top: 18px; }
+.method h2:first-child { margin-top: 0; }
+.method ol, .method ul { margin: 6px 0; padding-left: 20px; }
+.empty { padding: 24px 0 8px; color: var(--ink-2); }
+@media (max-width: 820px) {
+  .wrap { padding: 16px; }
+  .scout, .charts { grid-template-columns: minmax(0, 1fr); }
+  .patients { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 200px; }
+  .count { margin-left: 0; width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Hippocrates Trial Scout</h1>
+    <p class="sub" id="snapshot"></p>
+  </header>
+  <p class="notice"><strong>Demonstration only.</strong> All patients are synthetic. A listed trial is a candidate for clinician review, not a finding of eligibility or a treatment recommendation.</p>
+  <nav role="tablist" aria-label="Views">
+    <button role="tab" data-view="scout" aria-selected="true">Trial Scout</button>
+    <button role="tab" data-view="overview" aria-selected="false">Overview</button>
+    <button role="tab" data-view="method" aria-selected="false">Method</button>
+  </nav>
+
+  <section id="scout" class="scout">
+    <div class="panel patients" id="patientList" aria-label="Patients"></div>
+    <div class="panel">
+      <h2 id="pTitle"></h2>
+      <div class="facts" id="pFacts"></div>
+      <div class="controls">
+        <label>Tier <select id="fTier"><option value="">All</option><option>Strong</option><option>Good</option><option>Possible</option></select></label>
+        <label>Distance <select id="fGeo"><option value="">Any</option><option value="city">Same city</option><option value="state">Same state or closer</option></select></label>
+        <label>Type <select id="fType"><option value="">All studies</option><option value="INTERVENTIONAL">Treatment trials</option></select></label>
+        <span class="count" id="count" aria-live="polite"></span>
+      </div>
+      <div id="trials"></div>
+    </div>
+  </section>
+
+  <section id="overview" hidden>
+    <div class="tiles" id="tiles"></div>
+    <div class="charts">
+      <div class="panel">
+        <h2>How screening narrows the trial list</h2>
+        <p class="sub">Average trials left per patient after each gate</p>
+        <div id="funnelChart"></div>
+        <details><summary>View as table</summary><div class="table-wrap" id="funnelTable"></div></details>
+      </div>
+      <div class="panel">
+        <h2>Candidates per patient by tier</h2>
+        <div class="legend" id="tierLegend"></div>
+        <div id="tierChart"></div>
+        <details><summary>View as table</summary><div class="table-wrap" id="tierTable"></div></details>
+      </div>
+    </div>
+    <div class="panel compare">
+      <h2>What changed from the first version</h2>
+      <p class="sub">Both columns screen the same synthetic patients.</p>
+      <div class="table-wrap" id="compare"></div>
+    </div>
+  </section>
+
+  <section id="method" class="panel method" hidden>
+    <h2>Screening gates</h2>
+    <p class="sub">A trial must pass each gate, in this order, to appear.</p>
+    <ol>
+      <li><b>Condition:</b> the patient's tumour, or a broader family that includes it, is a listed condition.</li>
+      <li><b>Status:</b> the trial is recruiting, not yet recruiting, by invitation, or available as expanded access.</li>
+      <li><b>Age:</b> the patient is inside the registered age range and any age limit stated in the summary.</li>
+      <li><b>Sex:</b> the patient fits any sex restriction.</li>
+      <li><b>Biomarker:</b> EGFR, IDH and MGMT status do not conflict with what the trial selects for.</li>
+      <li><b>Disease setting:</b> newly diagnosed and recurrent trials only take matching patients.</li>
+      <li><b>Geography:</b> the trial has a site in the patient's country, or lists no sites yet.</li>
+    </ol>
+    <h2>Score</h2>
+    <p>Passing trials are ranked out of 100: condition 35, geography 25, biomarker 20, status 10, disease setting 5, study design 5. Records not updated for over two years lose 5 points. Strong is 75 or more, Good is 55 to 74, Possible is below 55.</p>
+    <h2>Limits</h2>
+    <ul>
+      <li id="criteriaLimit"></li>
+      <li>Biomarker and disease-setting rules read free text, so they can miss or misread a requirement.</li>
+      <li>Distance is grouped by city, state and country, not measured.</li>
+      <li>Performance status, prior treatment, tumour volume and organ function are not assessed.</li>
+      <li>The rules have not been validated against clinician decisions.</li>
+    </ul>
+  </section>
+</div>
+<div id="tip" role="status"></div>
+
+<script>
+"use strict";
+const DATA = /*__DATA__*/null;
+const TIERS = ["Strong", "Good", "Possible"];
+const GATE_LABELS = { condition: "Condition", status: "Open status", age: "Age", sex: "Sex",
+  biomarker: "Biomarker", setting: "Disease setting", geography: "Geography" };
+const STATUS_LABELS = { RECRUITING: "Recruiting", NOT_YET_RECRUITING: "Not yet recruiting",
+  ENROLLING_BY_INVITATION: "By invitation", AVAILABLE: "Expanded access" };
+const CRITERIA_FLAG = "Full eligibility criteria not reviewed";
+const fmt = n => Number(n).toLocaleString("en-US");
+const el = (tag, props = {}, ...kids) => {
+  const node = Object.assign(document.createElement(tag), props);
+  node.append(...kids);
+  return node;
+};
+const SVG = "http://www.w3.org/2000/svg";
+const svgEl = (tag, attrs = {}) => {
+  const node = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  return node;
+};
+
+let selected = DATA.patients[0].Patient_ID;
+
+function renderPatients() {
+  const list = document.getElementById("patientList");
+  list.replaceChildren(...DATA.patients.map(p => {
+    const total = (DATA.matches[p.Patient_ID] || []).length;
+    const btn = el("button", { className: "patient-btn", type: "button" },
+      el("span", {}, el("b", { textContent: p.Patient_ID }),
+        el("small", { textContent: `${p.AI_Predicted_Condition}, ${p.Patient_Age}` })),
+      el("span", { className: "n", textContent: fmt(total), title: "Candidate trials" }));
+    btn.setAttribute("aria-pressed", p.Patient_ID === selected);
+    btn.addEventListener("click", () => { selected = p.Patient_ID; renderPatients(); renderDetail(); });
+    return btn;
+  }));
+}
+
+function renderDetail() {
+  const p = DATA.patients.find(x => x.Patient_ID === selected);
+  document.getElementById("pTitle").textContent = `${p.Patient_ID}: ${p.AI_Predicted_Condition}`;
+  const facts = [["Age", p.Patient_Age], ["Sex", p.Patient_Sex], ["Location", p.Patient_Location],
+    ["Setting", p.Disease_Setting], ["EGFR", p.Biomarker_EGFR], ["IDH", p.Biomarker_IDH], ["MGMT", p.Biomarker_MGMT]];
+  document.getElementById("pFacts").replaceChildren(
+    ...facts.map(([k, v]) => el("div", {}, el("span", { textContent: k }), v)));
+  renderTrials();
+}
+
+function renderTrials() {
+  const tier = document.getElementById("fTier").value;
+  const geo = document.getElementById("fGeo").value;
+  const type = document.getElementById("fType").value;
+  const all = DATA.matches[selected] || [];
+  const rows = all.filter(t => (!tier || t.match_tier === tier)
+    && (!geo || t.geography === "city" || (geo === "state" && t.geography === "state"))
+    && (!type || t.study_type === type));
+  document.getElementById("count").textContent = `${fmt(rows.length)} of ${fmt(all.length)} ${all.length === 1 ? "candidate" : "candidates"}`;
+  const box = document.getElementById("trials");
+  if (!rows.length) {
+    box.replaceChildren(el("p", { className: "empty", textContent: all.length
+      ? "No candidates match these filters." : "No open trial passed screening for this patient." }));
+    return;
+  }
+  box.replaceChildren(...rows.slice(0, 50).map(trialCard));
+  if (rows.length > 50) box.append(el("p", { className: "sub", textContent: `Showing the top 50 of ${fmt(rows.length)}. Use the filters to narrow the list.` }));
+}
+
+function trialCard(t) {
+  const link = el("a", { href: t.study_url, target: "_blank", rel: "noopener", textContent: t.trial_title });
+  const meta = [t.nct_id, STATUS_LABELS[t.status] || t.status, (t.phases || "").replaceAll("EARLY_PHASE1", "Early phase 1").replaceAll("PHASE", "Phase ").replaceAll("|", "/"), t.best_site]
+    .filter(Boolean).join(" · ");
+  const items = [
+    ...t.match_reasons.split("; ").filter(Boolean).map(r => el("li", { className: "reason", textContent: r })),
+    ...t.review_flags.split("; ").filter(r => r && r !== CRITERIA_FLAG).map(r => el("li", { className: "flag", textContent: r })),
+  ];
+  return el("article", { className: "trial" },
+    el("div", { className: "score" }, String(t.match_score), el("small", { textContent: t.match_tier })),
+    el("div", {}, el("h3", {}, link), el("p", { className: "meta", textContent: meta }),
+      el("ul", { className: "why" }, ...items)));
+}
+
+function renderTiles() {
+  const s = DATA.summary;
+  const tiles = [[s.patients, "synthetic patients"], [s.open_trials, `open trials of ${fmt(s.trials)} in the snapshot`],
+    [s.matches, "candidate matches"], [s.strong_patients, "patients with a Strong candidate"]];
+  document.getElementById("tiles").replaceChildren(...tiles.map(([n, label]) =>
+    el("div", { className: "panel tile" }, el("b", { textContent: fmt(n) }), el("span", { textContent: label }))));
+}
+
+const tip = document.getElementById("tip");
+function bindTip(node, text) {
+  node.setAttribute("tabindex", "0");
+  node.setAttribute("aria-label", text);
+  const show = e => {
+    const box = e.clientX !== undefined ? { x: e.clientX, y: e.clientY } : (r => ({ x: r.left, y: r.top }))(node.getBoundingClientRect());
+    tip.textContent = text; tip.style.display = "block";
+    tip.style.left = Math.min(box.x + 12, innerWidth - tip.offsetWidth - 8) + "px";
+    tip.style.top = Math.max(box.y - tip.offsetHeight - 10, 8) + "px";
+  };
+  node.addEventListener("mousemove", show);
+  node.addEventListener("focus", show);
+  for (const ev of ["mouseleave", "blur"]) node.addEventListener(ev, () => { tip.style.display = "none"; });
+}
+
+function renderFunnel() {
+  const f = DATA.funnel;
+  const rows = [["All trials", f.start], ...Object.entries(f.gates).map(([g, v]) => [GATE_LABELS[g], v])];
+  const W = 520, rowH = 30, left = 108, right = 62, H = rows.length * rowH + 6;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Trials remaining after each screening gate" });
+  const barW = W - left - right;
+  svg.append(svgEl("line", { x1: left, x2: left, y1: 0, y2: H, stroke: "var(--axis)" }));
+  rows.forEach(([label, value], i) => {
+    const y = i * rowH + 6, w = Math.max(barW * value / f.start, value > 0 ? 3 : 0);
+    const name = svgEl("text", { x: left - 8, y: y + 13, "text-anchor": "end" }); name.textContent = label;
+    const bar = svgEl("rect", { x: left, y: y + 1, width: w, height: 16, rx: 4, fill: "var(--tier-good)" });
+    const val = svgEl("text", { x: left + w + 6, y: y + 13, class: "val" }); val.textContent = fmt(value);
+    const hit = svgEl("rect", { x: 0, y, width: W, height: rowH, fill: "transparent" });
+    svg.append(name, bar, val, hit);
+    bindTip(hit, `${label}: ${fmt(value)} trials left on average`);
+  });
+  document.getElementById("funnelChart").replaceChildren(svg);
+  table("funnelTable", ["Stage", "Average trials left"], rows.map(r => [r[0], fmt(r[1])]), [1]);
+}
+
+function renderTierChart() {
+  document.getElementById("tierLegend").replaceChildren(...TIERS.map(t =>
+    el("span", {}, Object.assign(el("i"), { style: `background:var(--tier-${t.toLowerCase()})` }), t)));
+  const ps = DATA.patients;
+  const max = Math.max(1, ...ps.map(p => TIERS.reduce((a, t) => a + p.tiers[t], 0)));
+  const W = 520, rowH = 22, left = 62, right = 44, H = ps.length * rowH + 4, barW = W - left - right;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Candidate trials per patient, split by tier" });
+  svg.append(svgEl("line", { x1: left, x2: left, y1: 0, y2: H, stroke: "var(--axis)" }));
+  ps.forEach((p, i) => {
+    const y = i * rowH + 3;
+    const name = svgEl("text", { x: left - 8, y: y + 12, "text-anchor": "end" }); name.textContent = p.Patient_ID;
+    svg.append(name);
+    let x = left, total = 0;
+    for (const t of TIERS) {
+      const n = p.tiers[t]; total += n;
+      if (!n) continue;
+      const w = Math.max(barW * n / max - 2, 2);
+      const seg = svgEl("rect", { x, y, width: w, height: 14, rx: 3, fill: `var(--tier-${t.toLowerCase()})` });
+      svg.append(seg); x += w + 2;
+      bindTip(seg, `${p.Patient_ID}, ${t}: ${fmt(n)}`);
+    }
+    const val = svgEl("text", { x: x + 4, y: y + 12, class: "val" }); val.textContent = fmt(total);
+    svg.append(val);
+  });
+  document.getElementById("tierChart").replaceChildren(svg);
+  table("tierTable", ["Patient", ...TIERS], ps.map(p => [p.Patient_ID, ...TIERS.map(t => fmt(p.tiers[t]))]), [1, 2, 3]);
+}
+
+function table(id, heads, rows, numeric = []) {
+  const cell = (tag, v, i) => el(tag, { textContent: v, className: numeric.includes(i) ? "num" : "" });
+  document.getElementById(id).replaceChildren(el("table", {},
+    el("thead", {}, el("tr", {}, ...heads.map((h, i) => cell("th", h, i)))),
+    el("tbody", {}, ...rows.map(r => el("tr", {}, ...r.map((v, i) => cell("td", v, i)))))));
+}
+
+function renderCompare() {
+  const s = DATA.summary, l = DATA.legacy;
+  table("compare", ["Measure", "First version", "This version"], [
+    ["Matches", fmt(l.matches), fmt(s.matches)],
+    ["Trials a patient could still join", `${l.open_share}%`, "100%"],
+    ["Registered age limits checked", "No", "Yes"],
+    ["Biomarker conflicts excluded", "No", "EGFR, IDH, MGMT"],
+    ["Site in patient's country required", "No", "Yes"],
+    ["Ranked, with reasons", "No", "Yes"],
+  ]);
+}
+
+document.getElementById("snapshot").textContent = `ClinicalTrials.gov snapshot, updated to ${DATA.summary.snapshot.replaceAll("-", "‑")}`;
+document.getElementById("criteriaLimit").textContent = DATA.summary.has_criteria
+  ? "Inclusion criteria add a biomarker or disease-setting rule only when a clause states it plainly. Exclusion criteria are not assessed."
+  : "This snapshot has no full eligibility criteria, so matching uses titles, conditions, interventions, summaries and age categories.";
+for (const id of ["fTier", "fGeo", "fType"]) document.getElementById(id).addEventListener("change", renderTrials);
+document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("click", () => {
+  document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", b === btn));
+  for (const id of ["scout", "overview", "method"]) document.getElementById(id).hidden = id !== btn.dataset.view;
+}));
+renderPatients(); renderDetail(); renderTiles(); renderFunnel(); renderTierChart(); renderCompare();
+</script>
+</body>
+</html>
