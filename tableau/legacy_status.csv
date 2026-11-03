@@ -1,0 +1,12 @@
+status_label,can_join,matches
+Completed,Closed to new patients,3814
+Recruiting,Can still join,1764
+Terminated,Closed to new patients,1139
+Status unknown,Closed to new patients,990
+"Active, not recruiting",Closed to new patients,807
+Not yet recruiting,Can still join,494
+Withdrawn,Closed to new patients,405
+Suspended,Closed to new patients,67
+By invitation,Can still join,45
+No longer available,Closed to new patients,40
+Expanded access,Can still join,37

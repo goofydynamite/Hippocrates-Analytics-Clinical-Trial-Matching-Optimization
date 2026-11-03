@@ -1,0 +1,1634 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2025.2.0 (20252.25.0912.2314)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <BasicButtonObject />
+    <BasicButtonObjectTextSupport />
+    <MapboxVectorStylesAndLayers />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='Patient' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;PID-001&quot;'>
+        <calculation class='tableau' formula='&quot;PID-001&quot;' />
+        <members>
+          <member value='&quot;PID-001&quot;' />
+          <member value='&quot;PID-002&quot;' />
+          <member value='&quot;PID-003&quot;' />
+          <member value='&quot;PID-004&quot;' />
+          <member value='&quot;PID-005&quot;' />
+          <member value='&quot;PID-006&quot;' />
+          <member value='&quot;PID-007&quot;' />
+          <member value='&quot;PID-008&quot;' />
+          <member value='&quot;PID-009&quot;' />
+          <member value='&quot;PID-010&quot;' />
+          <member value='&quot;PID-011&quot;' />
+          <member value='&quot;PID-012&quot;' />
+          <member value='&quot;PID-013&quot;' />
+          <member value='&quot;PID-014&quot;' />
+          <member value='&quot;PID-015&quot;' />
+          <member value='&quot;PID-016&quot;' />
+          <member value='&quot;PID-017&quot;' />
+          <member value='&quot;PID-018&quot;' />
+          <member value='&quot;PID-019&quot;' />
+          <member value='&quot;PID-020&quot;' />
+        </members>
+      </column>
+    </datasource>
+    <datasource caption="Trial Scout" inline='true' name='federated.scout' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="trial_scout.csv" name='textscan.scout'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="trial_scout.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.scout' name="trial_scout.csv" table='[trial_scout#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name="Patient_ID" ordinal='0' />
+            <column datatype='string' name="nct_id" ordinal='1' />
+            <column datatype='string' name="trial_title" ordinal='2' />
+            <column datatype='integer' name="match_score" ordinal='3' />
+            <column datatype='string' name="match_tier" ordinal='4' />
+            <column datatype='string' name="condition_match" ordinal='5' />
+            <column datatype='string' name="geography" ordinal='6' />
+            <column datatype='string' name="best_site" ordinal='7' />
+            <column datatype='integer' name="sites_in_country" ordinal='8' />
+            <column datatype='string' name="status" ordinal='9' />
+            <column datatype='string' name="phases" ordinal='10' />
+            <column datatype='string' name="study_type" ordinal='11' />
+            <column datatype='string' name="sponsor" ordinal='12' />
+            <column datatype='string' name="study_url" ordinal='13' />
+            <column datatype='string' name="match_reasons" ordinal='14' />
+            <column datatype='string' name="review_flags" ordinal='15' />
+            <column datatype='integer' name="patient_rank" ordinal='16' />
+            <column datatype='string' name="AI_Predicted_Condition" ordinal='17' />
+            <column datatype='integer' name="Patient_Age" ordinal='18' />
+            <column datatype='string' name="Patient_Sex" ordinal='19' />
+            <column datatype='string' name="Patient_Location" ordinal='20' />
+            <column datatype='string' name="Disease_Setting" ordinal='21' />
+            <column datatype='string' name="Biomarker_EGFR" ordinal='22' />
+            <column datatype='string' name="Biomarker_IDH" ordinal='23' />
+            <column datatype='string' name="Biomarker_MGMT" ordinal='24' />
+            <column datatype='string' name="site_city" ordinal='25' />
+            <column datatype='string' name="site_state" ordinal='26' />
+            <column datatype='string' name="site_country" ordinal='27' />
+            <column datatype='string' name="distance" ordinal='28' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Selected Patient' datatype='boolean' name='[Selected Patient]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='[Patient_ID] = [Parameters].[Parameter 1]' />
+      </column>
+      <column caption='Patient Summary' datatype='string' name='[Patient Summary]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='[AI_Predicted_Condition] + &quot;  |  Age &quot; + STR([Patient_Age]) + &quot;  |  &quot; + [Patient_Sex] + &quot;  |  &quot; + [Patient_Location] + &quot;  |  &quot; + [Disease_Setting] + &quot;  |  EGFR &quot; + [Biomarker_EGFR] + &quot;  |  IDH &quot; + [Biomarker_IDH] + &quot;  |  MGMT &quot; + [Biomarker_MGMT]' />
+      </column>
+      <column caption='Candidates' datatype='integer' name='[Candidates]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='COUNTD([nct_id] + [Patient_ID])' />
+      </column>
+      <column caption="Rank" datatype='integer' name='[patient_rank]' role='dimension' type='ordinal' />
+      <column caption="Score" datatype='integer' name='[match_score]' role='dimension' type='ordinal' />
+      <column caption="Tier" datatype='string' name='[match_tier]' role='dimension' type='nominal' />
+      <column caption="Trial" datatype='string' name='[trial_title]' role='dimension' type='nominal' />
+      <column caption="NCT ID" datatype='string' name='[nct_id]' role='dimension' type='nominal' />
+      <column caption="Status" datatype='string' name='[status]' role='dimension' type='nominal' />
+      <column caption="Nearest site" datatype='string' name='[best_site]' role='dimension' type='nominal' />
+      <column caption="Why it matches" datatype='string' name='[match_reasons]' role='dimension' type='nominal' />
+      <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+      <column caption="Distance" datatype='string' name='[distance]' role='dimension' type='nominal' />
+      <column caption="City" datatype='string' name='[site_city]' role='dimension' semantic-role='[City].[Name]' type='nominal' />
+      <column caption="State" datatype='string' name='[site_state]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
+      <column caption="Country" datatype='string' name='[site_country]' role='dimension' semantic-role='[Country].[Name]' type='nominal' />
+      <column caption='Candidates' datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column-instance column='[match_tier]' derivation='None' name='[none:match_tier:nk]' pivot='key' type='nominal' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/trial_scout.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:match_tier:nk]' type='palette'>
+          <map to='#184f95'>
+            <bucket>&quot;Strong&quot;</bucket>
+          </map>
+          <map to='#3987e5'>
+            <bucket>&quot;Good&quot;</bucket>
+          </map>
+          <map to='#86b6ef'>
+            <bucket>&quot;Possible&quot;</bucket>
+          </map>
+          </encoding>
+        </style-rule>
+      </style>
+
+    </datasource>
+    <datasource caption="Funnel" inline='true' name='federated.funnel' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="screening_funnel.csv" name='textscan.funnel'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="screening_funnel.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.funnel' name="screening_funnel.csv" table='[screening_funnel#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='integer' name="stage_order" ordinal='0' />
+            <column datatype='string' name="stage" ordinal='1' />
+            <column datatype='real' name="avg_trials_left" ordinal='2' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Stage" datatype='string' name='[stage]' role='dimension' type='nominal' />
+      <column caption="Average trials left per patient" datatype='real' name='[avg_trials_left]' role='measure' type='quantitative' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/screening_funnel.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+
+    </datasource>
+    <datasource caption="KPIs" inline='true' name='federated.kpis' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="kpis.csv" name='textscan.kpis'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="kpis.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.kpis' name="kpis.csv" table='[kpis#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='integer' name="kpi_order" ordinal='0' />
+            <column datatype='string' name="kpi" ordinal='1' />
+            <column datatype='integer' name="value" ordinal='2' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Metric" datatype='string' name='[kpi]' role='dimension' type='nominal' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/kpis.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+
+    </datasource>
+    <datasource caption="Comparison" inline='true' name='federated.comparison' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="comparison.csv" name='textscan.comparison'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="comparison.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.comparison' name="comparison.csv" table='[comparison#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name="version" ordinal='0' />
+            <column datatype='integer' name="matches" ordinal='1' />
+            <column datatype='real' name="joinable_pct" ordinal='2' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Version" datatype='string' name='[version]' role='dimension' type='nominal' />
+      <column caption="Matches" datatype='integer' name='[matches]' role='measure' type='quantitative' />
+      <column caption="% of matches a patient can still join" datatype='real' default-format='p0.0%' name='[joinable_pct]' role='measure' type='quantitative' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/comparison.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+
+    </datasource>
+    <datasource caption="Checks" inline='true' name='federated.checks' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="checks.csv" name='textscan.checks'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="checks.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.checks' name="checks.csv" table='[checks#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name="check" ordinal='0' />
+            <column datatype='string' name="version" ordinal='1' />
+            <column datatype='string' name="value" ordinal='2' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Check" datatype='string' name='[check]' role='dimension' type='nominal' />
+      <column caption="Version" datatype='string' name='[version]' role='dimension' type='nominal' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/checks.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+
+    </datasource>
+    <datasource caption="Phases" inline='true' name='federated.phases' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="phases.csv" name='textscan.phases'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="phases.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.phases' name="phases.csv" table='[phases#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name="phase" ordinal='0' />
+            <column datatype='integer' name="open_trials" ordinal='1' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Phase" datatype='string' name='[phase]' role='dimension' type='nominal' />
+      <column caption="Open trials" datatype='integer' name='[open_trials]' role='measure' type='quantitative' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/phases.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+
+    </datasource>
+    <datasource caption="First Version Statuses" inline='true' name='federated.legacy_status' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="legacy_status.csv" name='textscan.legacy_status'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="legacy_status.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.legacy_status' name="legacy_status.csv" table='[legacy_status#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name="status_label" ordinal='0' />
+            <column datatype='string' name="can_join" ordinal='1' />
+            <column datatype='integer' name="matches" ordinal='2' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Trial status" datatype='string' name='[status_label]' role='dimension' type='nominal' />
+      <column caption="Can a patient join?" datatype='string' name='[can_join]' role='dimension' type='nominal' />
+      <column caption="Matches" datatype='integer' name='[matches]' role='measure' type='quantitative' />
+      <column-instance column='[can_join]' derivation='None' name='[none:can_join:nk]' pivot='key' type='nominal' />
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/legacy_status.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:can_join:nk]' type='palette'>
+          <map to='#3987e5'>
+            <bucket>&quot;Can still join&quot;</bucket>
+          </map>
+          <map to='#b8c2cf'>
+            <bucket>&quot;Closed to new patients&quot;</bucket>
+          </map>
+          </encoding>
+        </style-rule>
+      </style>
+
+    </datasource>
+    <datasource caption="Patient Numbers" inline='true' name='federated.patient_stats' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="patient_stats.csv" name='textscan.patient_stats'>
+            <connection class='textscan' directory="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau" filename="patient_stats.csv" password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.patient_stats' name="patient_stats.csv" table='[patient_stats#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name="Patient_ID" ordinal='0' />
+            <column datatype='string' name="stat" ordinal='1' />
+            <column datatype='integer' name="value" ordinal='2' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+      <column caption="Number" datatype='string' name='[stat]' role='dimension' type='nominal' />
+      <column caption='Selected Patient' datatype='boolean' name='[Selected Patient]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='[Patient_ID] = [Parameters].[Parameter 1]' />
+      </column>
+
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname="C:/Users/deipt/Downloads/Elif/hippocrates/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization-main/tableau/patient_stats.hyper" default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+
+    </datasource>
+  </datasources>
+  <mapsources>
+    <mapsource name='Tableau' />
+  </mapsources>
+  <actions>
+    <action caption='Open on ClinicalTrials.gov' name='[Action1_OpenStudy]'>
+      <activation type='on-select' />
+      <source dashboard='Trial Scout' type='sheet' worksheet='Candidate Trials' />
+      <link caption='' expression='https://clinicaltrials.gov/study/&lt;[nct_id]&gt;' />
+    </action>
+    <datasources>
+      <datasource caption='Trial Scout' name='federated.scout' />
+    </datasources>
+    <datasource-dependencies datasource='federated.scout'>
+      <column caption='NCT ID' datatype='string' name='[nct_id]' role='dimension' type='nominal' />
+    </datasource-dependencies>
+  </actions>
+  <worksheets>
+    <worksheet name="Patient Facts">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Selected patient</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Trial Scout' name='federated.scout' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Patient' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;PID-001&quot;'>
+              <calculation class='tableau' formula='&quot;PID-001&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.scout'>
+            <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+            <column caption='Selected Patient' datatype='boolean' name='[Selected Patient]' role='dimension' type='nominal'><calculation class='tableau' formula='[Patient_ID] = [Parameters].[Parameter 1]' /></column>
+            <column caption='Patient Summary' datatype='string' name='[Patient Summary]' role='dimension' type='nominal'><calculation class='tableau' formula='[AI_Predicted_Condition] + &quot;  |  Age &quot; + STR([Patient_Age]) + &quot;  |  &quot; + [Patient_Sex] + &quot;  |  &quot; + [Patient_Location] + &quot;  |  &quot; + [Disease_Setting] + &quot;  |  EGFR &quot; + [Biomarker_EGFR] + &quot;  |  IDH &quot; + [Biomarker_IDH] + &quot;  |  MGMT &quot; + [Biomarker_MGMT]' /></column>
+            <column-instance column='[Selected Patient]' derivation='None' name='[none:Selected Patient:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Patient Summary]' derivation='None' name='[none:Patient Summary:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.scout].[none:Selected Patient:nk]'>
+            <groupfilter function='member' level='[none:Selected Patient:nk]' member='true' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.scout].[none:Selected Patient:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.scout].[none:Patient Summary:nk]' value='1150' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Text' />
+
+
+          </pane>
+        </panes>
+        <rows>[federated.scout].[none:Patient Summary:nk]</rows>
+        <cols></cols>
+      </table>
+    </worksheet>
+    <worksheet name="Candidate Trials">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Candidate trials, best first. Click a trial to open it on ClinicalTrials.gov.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Trial Scout' name='federated.scout' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Patient' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;PID-001&quot;'>
+              <calculation class='tableau' formula='&quot;PID-001&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.scout'>
+            <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+            <column caption='Selected Patient' datatype='boolean' name='[Selected Patient]' role='dimension' type='nominal'><calculation class='tableau' formula='[Patient_ID] = [Parameters].[Parameter 1]' /></column>
+            <column caption="Rank" datatype='integer' name='[patient_rank]' role='dimension' type='ordinal' />
+            <column caption="Score" datatype='integer' name='[match_score]' role='dimension' type='ordinal' />
+            <column caption="Tier" datatype='string' name='[match_tier]' role='dimension' type='nominal' />
+            <column caption="Trial" datatype='string' name='[trial_title]' role='dimension' type='nominal' />
+            <column caption="NCT ID" datatype='string' name='[nct_id]' role='dimension' type='nominal' />
+            <column caption="Status" datatype='string' name='[status]' role='dimension' type='nominal' />
+            <column caption="Nearest site" datatype='string' name='[best_site]' role='dimension' type='nominal' />
+            <column caption="Why it matches" datatype='string' name='[match_reasons]' role='dimension' type='nominal' />
+            <column caption="Distance" datatype='string' name='[distance]' role='dimension' type='nominal' />
+            <column-instance column='[Selected Patient]' derivation='None' name='[none:Selected Patient:nk]' pivot='key' type='nominal' />
+            <column-instance column='[patient_rank]' derivation='None' name='[none:patient_rank:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[match_score]' derivation='None' name='[none:match_score:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[match_tier]' derivation='None' name='[none:match_tier:nk]' pivot='key' type='nominal' />
+            <column-instance column='[trial_title]' derivation='None' name='[none:trial_title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[nct_id]' derivation='None' name='[none:nct_id:nk]' pivot='key' type='nominal' />
+            <column-instance column='[status]' derivation='None' name='[none:status:nk]' pivot='key' type='nominal' />
+            <column-instance column='[best_site]' derivation='None' name='[none:best_site:nk]' pivot='key' type='nominal' />
+            <column-instance column='[match_reasons]' derivation='None' name='[none:match_reasons:nk]' pivot='key' type='nominal' />
+            <column-instance column='[distance]' derivation='None' name='[none:distance:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.scout].[none:Selected Patient:nk]'>
+            <groupfilter function='member' level='[none:Selected Patient:nk]' member='true' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.scout].[none:match_tier:nk]'>
+            <groupfilter function='level-members' level='[none:match_tier:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.scout].[none:distance:nk]'>
+            <groupfilter function='level-members' level='[none:distance:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.scout].[none:Selected Patient:nk]</column>
+            <column>[federated.scout].[none:match_tier:nk]</column>
+            <column>[federated.scout].[none:distance:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.scout].[none:trial_title:nk]' value='330' />
+            <format attr='width' field='[federated.scout].[none:nct_id:nk]' value='95' />
+            <format attr='width' field='[federated.scout].[none:best_site:nk]' value='170' />
+            <format attr='width' field='[federated.scout].[none:match_reasons:nk]' value='330' />
+            <format attr='width' field='[federated.scout].[none:status:nk]' value='120' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Text' />
+
+
+          </pane>
+        </panes>
+        <rows>([federated.scout].[none:patient_rank:ok] / [federated.scout].[none:match_score:ok] / [federated.scout].[none:match_tier:nk] / [federated.scout].[none:trial_title:nk] / [federated.scout].[none:nct_id:nk] / [federated.scout].[none:status:nk] / [federated.scout].[none:best_site:nk] / [federated.scout].[none:match_reasons:nk])</rows>
+        <cols></cols>
+      </table>
+    </worksheet>
+    <worksheet name="Trial Sites">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Nearest site of each candidate trial</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Trial Scout' name='federated.scout' />
+            <datasource name='Parameters' />
+          </datasources>
+          <mapsources>
+            <mapsource name='Tableau' />
+          </mapsources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Patient' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;PID-001&quot;'>
+              <calculation class='tableau' formula='&quot;PID-001&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.scout'>
+            <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+            <column caption='Selected Patient' datatype='boolean' name='[Selected Patient]' role='dimension' type='nominal'><calculation class='tableau' formula='[Patient_ID] = [Parameters].[Parameter 1]' /></column>
+            <column caption='Candidates' datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'><calculation class='tableau' formula='1' /></column>
+            <column caption="City" datatype='string' name='[site_city]' role='dimension' semantic-role='[City].[Name]' type='nominal' />
+            <column caption="State" datatype='string' name='[site_state]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
+            <column caption="Country" datatype='string' name='[site_country]' role='dimension' semantic-role='[Country].[Name]' type='nominal' />
+            <column-instance column='[Selected Patient]' derivation='None' name='[none:Selected Patient:nk]' pivot='key' type='nominal' />
+            <column-instance column='[site_city]' derivation='None' name='[none:site_city:nk]' pivot='key' type='nominal' />
+            <column-instance column='[site_state]' derivation='None' name='[none:site_state:nk]' pivot='key' type='nominal' />
+            <column-instance column='[site_country]' derivation='None' name='[none:site_country:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.scout].[none:Selected Patient:nk]'>
+            <groupfilter function='member' level='[none:Selected Patient:nk]' member='true' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.scout].[none:Selected Patient:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='map'>
+            <format attr='washout' value='0.0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Circle' />
+            <encodings>
+              <lod column='[federated.scout].[none:site_city:nk]' />
+              <lod column='[federated.scout].[none:site_state:nk]' />
+              <lod column='[federated.scout].[none:site_country:nk]' />
+              <size column='[federated.scout].[sum:Number of Records:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text><run bold='true'>&lt;[federated.scout].[none:site_city:nk]&gt;, &lt;[federated.scout].[none:site_state:nk]&gt;</run><run>&#10;Candidate trials with a site here: &lt;[federated.scout].[sum:Number of Records:qk]&gt;</run></formatted-text>
+            </customized-tooltip>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-color' value='#184f95' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.scout].[Latitude (generated)]</rows>
+        <cols>[federated.scout].[Longitude (generated)]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Candidates by Tier">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Candidates per patient by tier</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Trial Scout' name='federated.scout' />
+          </datasources>
+          <datasource-dependencies datasource='federated.scout'>
+            <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+            <column caption="Tier" datatype='string' name='[match_tier]' role='dimension' type='nominal' />
+            <column caption='Candidates' datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'><calculation class='tableau' formula='1' /></column>
+            <column-instance column='[Patient_ID]' derivation='None' name='[none:Patient_ID:nk]' pivot='key' type='nominal' />
+            <column-instance column='[match_tier]' derivation='None' name='[none:match_tier:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.scout].[none:match_tier:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;Possible&quot;</bucket>
+              <bucket>&quot;Good&quot;</bucket>
+              <bucket>&quot;Strong&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.scout].[none:match_tier:nk]' />
+            </encodings>
+
+          </pane>
+        </panes>
+        <rows>[federated.scout].[none:Patient_ID:nk]</rows>
+        <cols>[federated.scout].[sum:Number of Records:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Screening Funnel">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Average trials left after each screening gate</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Funnel' name='federated.funnel' />
+          </datasources>
+          <datasource-dependencies datasource='federated.funnel'>
+            <column caption="Stage" datatype='string' name='[stage]' role='dimension' type='nominal' />
+            <column caption="Average trials left per patient" datatype='real' name='[avg_trials_left]' role='measure' type='quantitative' />
+            <column-instance column='[stage]' derivation='None' name='[none:stage:nk]' pivot='key' type='nominal' />
+            <column-instance column='[avg_trials_left]' derivation='Sum' name='[sum:avg_trials_left:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <text column='[federated.funnel].[sum:avg_trials_left:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-color' value='#3987e5' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.funnel].[none:stage:nk]</rows>
+        <cols>[federated.funnel].[sum:avg_trials_left:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="KPI Tiles">
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='KPIs' name='federated.kpis' />
+          </datasources>
+          <datasource-dependencies datasource='federated.kpis'>
+            <column caption="Metric" datatype='string' name='[kpi]' role='dimension' type='nominal' />
+            <column caption='Value' datatype='integer' name='[value]' role='measure' type='quantitative' />
+            <column-instance column='[kpi]' derivation='None' name='[none:kpi:nk]' pivot='key' type='nominal' />
+            <column-instance column='[value]' derivation='Sum' name='[sum:value:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.kpis].[none:kpi:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;Synthetic patients&quot;</bucket>
+              <bucket>&quot;Open trials&quot;</bucket>
+              <bucket>&quot;Candidate matches&quot;</bucket>
+              <bucket>&quot;Patients with a Strong match&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='font-size' value='26' />
+            <format attr='font-weight' value='bold' />
+            <format attr='color' value='#184f95' />
+            <format attr='width' field='[federated.kpis].[none:kpi:nk]' value='290' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.kpis].[none:kpi:nk]' value='300' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Text' />
+            <encodings>
+              <text column='[federated.kpis].[sum:value:qk]' />
+            </encodings>
+
+          </pane>
+        </panes>
+        <rows></rows>
+        <cols>[federated.kpis].[none:kpi:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Matches Compared">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Candidate matches</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Comparison' name='federated.comparison' />
+          </datasources>
+          <datasource-dependencies datasource='federated.comparison'>
+            <column caption="Version" datatype='string' name='[version]' role='dimension' type='nominal' />
+            <column caption="Matches" datatype='integer' name='[matches]' role='measure' type='quantitative' />
+            <column caption="% of matches a patient can still join" datatype='real' default-format='p0.0%' name='[joinable_pct]' role='measure' type='quantitative' />
+            <column-instance column='[version]' derivation='None' name='[none:version:nk]' pivot='key' type='nominal' />
+            <column-instance column='[matches]' derivation='Sum' name='[sum:matches:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.comparison].[none:version:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;First version&quot;</bucket>
+              <bucket>&quot;Current version&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <text column='[federated.comparison].[sum:matches:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-color' value='#3987e5' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.comparison].[none:version:nk]</rows>
+        <cols>[federated.comparison].[sum:matches:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Joinable Compared">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>% of matches a patient can still join</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Comparison' name='federated.comparison' />
+          </datasources>
+          <datasource-dependencies datasource='federated.comparison'>
+            <column caption="Version" datatype='string' name='[version]' role='dimension' type='nominal' />
+            <column caption="Matches" datatype='integer' name='[matches]' role='measure' type='quantitative' />
+            <column caption="% of matches a patient can still join" datatype='real' default-format='p0.0%' name='[joinable_pct]' role='measure' type='quantitative' />
+            <column-instance column='[version]' derivation='None' name='[none:version:nk]' pivot='key' type='nominal' />
+            <column-instance column='[joinable_pct]' derivation='Sum' name='[sum:joinable_pct:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.comparison].[none:version:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;First version&quot;</bucket>
+              <bucket>&quot;Current version&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <text column='[federated.comparison].[sum:joinable_pct:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-color' value='#3987e5' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.comparison].[none:version:nk]</rows>
+        <cols>[federated.comparison].[sum:joinable_pct:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Checks Table">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>What each version checks</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Checks' name='federated.checks' />
+          </datasources>
+          <datasource-dependencies datasource='federated.checks'>
+            <column caption="Check" datatype='string' name='[check]' role='dimension' type='nominal' />
+            <column caption="Version" datatype='string' name='[version]' role='dimension' type='nominal' />
+            <column caption="Value" datatype='string' name='[value]' role='dimension' type='nominal' />
+            <column-instance column='[check]' derivation='None' name='[none:check:nk]' pivot='key' type='nominal' />
+            <column-instance column='[version]' derivation='None' name='[none:version:nk]' pivot='key' type='nominal' />
+            <column-instance column='[value]' derivation='None' name='[none:value:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.checks].[none:check:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;Only trials a patient can still join&quot;</bucket>
+              <bucket>&quot;Registered age limits checked&quot;</bucket>
+              <bucket>&quot;EGFR, IDH and MGMT conflicts excluded&quot;</bucket>
+              <bucket>&quot;Site in the patient's country required&quot;</bucket>
+              <bucket>&quot;Ranked, with the reasons shown&quot;</bucket>
+              <bucket>&quot;Automated tests&quot;</bucket>
+            </dictionary>
+          </sort>
+          <sort class='manual' column='[federated.checks].[none:version:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;First version&quot;</bucket>
+              <bucket>&quot;Current version&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.checks].[none:check:nk]' value='290' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='width' field='[federated.checks].[none:version:nk]' value='122' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Text' />
+            <encodings>
+              <text column='[federated.checks].[none:value:nk]' />
+            </encodings>
+
+          </pane>
+        </panes>
+        <rows>[federated.checks].[none:check:nk]</rows>
+        <cols>[federated.checks].[none:version:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Patient Numbers">
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Patient Numbers' name='federated.patient_stats' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Patient' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;PID-001&quot;'>
+              <calculation class='tableau' formula='&quot;PID-001&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.patient_stats'>
+            <column caption="Patient" datatype='string' name='[Patient_ID]' role='dimension' type='nominal' />
+            <column caption='Selected Patient' datatype='boolean' name='[Selected Patient]' role='dimension' type='nominal'><calculation class='tableau' formula='[Patient_ID] = [Parameters].[Parameter 1]' /></column>
+            <column caption="Number" datatype='string' name='[stat]' role='dimension' type='nominal' />
+            <column caption='Value' datatype='integer' name='[value]' role='measure' type='quantitative' />
+            <column-instance column='[Selected Patient]' derivation='None' name='[none:Selected Patient:nk]' pivot='key' type='nominal' />
+            <column-instance column='[stat]' derivation='None' name='[none:stat:nk]' pivot='key' type='nominal' />
+            <column-instance column='[value]' derivation='Sum' name='[sum:value:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.patient_stats].[none:Selected Patient:nk]'>
+            <groupfilter function='member' level='[none:Selected Patient:nk]' member='true' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <sort class='manual' column='[federated.patient_stats].[none:stat:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;Candidate trials&quot;</bucket>
+              <bucket>&quot;Strong matches&quot;</bucket>
+              <bucket>&quot;With a site in their city&quot;</bucket>
+              <bucket>&quot;Best score&quot;</bucket>
+            </dictionary>
+          </sort>
+          <slices>
+            <column>[federated.patient_stats].[none:Selected Patient:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='font-size' value='22' />
+            <format attr='font-weight' value='bold' />
+            <format attr='color' value='#184f95' />
+            <format attr='width' field='[federated.patient_stats].[none:stat:nk]' value='290' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Text' />
+            <encodings>
+              <text column='[federated.patient_stats].[sum:value:qk]' />
+            </encodings>
+
+          </pane>
+        </panes>
+        <rows></rows>
+        <cols>[federated.patient_stats].[none:stat:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Trials by Phase">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>Open trials by phase</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Phases' name='federated.phases' />
+          </datasources>
+          <datasource-dependencies datasource='federated.phases'>
+            <column caption="Phase" datatype='string' name='[phase]' role='dimension' type='nominal' />
+            <column caption="Open trials" datatype='integer' name='[open_trials]' role='measure' type='quantitative' />
+            <column-instance column='[phase]' derivation='None' name='[none:phase:nk]' pivot='key' type='nominal' />
+            <column-instance column='[open_trials]' derivation='Sum' name='[sum:open_trials:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.phases].[none:phase:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;Early phase 1&quot;</bucket>
+              <bucket>&quot;Phase 1&quot;</bucket>
+              <bucket>&quot;Phase 1/2&quot;</bucket>
+              <bucket>&quot;Phase 2&quot;</bucket>
+              <bucket>&quot;Phase 2/3&quot;</bucket>
+              <bucket>&quot;Phase 3&quot;</bucket>
+              <bucket>&quot;Phase 4&quot;</bucket>
+              <bucket>&quot;Not applicable&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <text column='[federated.phases].[sum:open_trials:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-color' value='#3987e5' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.phases].[none:phase:nk]</rows>
+        <cols>[federated.phases].[sum:open_trials:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="First Version Statuses">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontcolor='#184f95' fontsize='13'>What the first version's matches were (blue: a patient can still join)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='First Version Statuses' name='federated.legacy_status' />
+          </datasources>
+          <datasource-dependencies datasource='federated.legacy_status'>
+            <column caption="Trial status" datatype='string' name='[status_label]' role='dimension' type='nominal' />
+            <column caption="Can a patient join?" datatype='string' name='[can_join]' role='dimension' type='nominal' />
+            <column caption="Matches" datatype='integer' name='[matches]' role='measure' type='quantitative' />
+            <column-instance column='[status_label]' derivation='None' name='[none:status_label:nk]' pivot='key' type='nominal' />
+            <column-instance column='[can_join]' derivation='None' name='[none:can_join:nk]' pivot='key' type='nominal' />
+            <column-instance column='[matches]' derivation='Sum' name='[sum:matches:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <sort class='manual' column='[federated.legacy_status].[none:status_label:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;Completed&quot;</bucket>
+              <bucket>&quot;Recruiting&quot;</bucket>
+              <bucket>&quot;Terminated&quot;</bucket>
+              <bucket>&quot;Status unknown&quot;</bucket>
+              <bucket>&quot;Active, not recruiting&quot;</bucket>
+              <bucket>&quot;Not yet recruiting&quot;</bucket>
+              <bucket>&quot;Withdrawn&quot;</bucket>
+              <bucket>&quot;Suspended&quot;</bucket>
+              <bucket>&quot;By invitation&quot;</bucket>
+              <bucket>&quot;No longer available&quot;</bucket>
+              <bucket>&quot;Expanded access&quot;</bucket>
+            </dictionary>
+          </sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.legacy_status].[none:can_join:nk]' />
+              <text column='[federated.legacy_status].[sum:matches:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.legacy_status].[none:status_label:nk]</rows>
+        <cols>[federated.legacy_status].[sum:matches:qk]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="Trial Scout">
+      <style>
+        <style-rule element='table'>
+          <format attr='background-color' value='#eef2f7' />
+        </style-rule>
+      </style>
+      <size maxheight='1360' maxwidth='1280' minheight='1360' minwidth='1280' />
+      <zones>
+        <zone h='100000' id='1' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3824' id='2' type-v2='text' w='76000' x='0' y='0'>
+            <formatted-text><run bold='true' fontcolor='#ffffff' fontsize='20'>Hippocrates Trial Scout</run><run fontcolor='#9ec5f4' fontsize='14'>   |   Trial Scout</run></formatted-text>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='10' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='2352' id='8' type-v2='text' w='76000' x='0' y='3824'>
+            <formatted-text><run fontcolor='#cde2fb' fontsize='10'>Pick a patient to see their candidate trials, ranked, with the reason for each match</run><run fontcolor='#86b6ef' fontsize='9' italic='true'>   ·   Synthetic patients · not medical advice</run></formatted-text>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='6' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='6176' id='10' type-v2='dashboard-object' w='12000' x='76000' y='0'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{2A6D107F-12FF-5C9A-B5E7-FF2102A4C089}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Overview →</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontname='Tableau Bold' fontsize='10' />
+                <format attr='background-color' value='#2f6fc0' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='6176' id='11' type-v2='dashboard-object' w='12000' x='88000' y='0'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{D8D5A5AC-2560-58E9-A4F3-564733D4D88A}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Before / after →</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontname='Tableau Bold' fontsize='10' />
+                <format attr='background-color' value='#2f6fc0' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='4559' id='3' mode='compact' param='[Parameters].[Parameter 1]' type-v2='paramctrl' w='22000' x='800' y='6176'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#ffffff' />
+            </zone-style>
+          </zone>
+          <zone h='4559' id='20' mode='checkdropdown' name="Candidate Trials" param='[federated.scout].[none:match_tier:nk]' type-v2='filter' values='relevant' w='22000' x='23200' y='6176'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#ffffff' />
+            </zone-style>
+          </zone>
+          <zone h='4559' id='21' mode='checkdropdown' name="Candidate Trials" param='[federated.scout].[none:distance:nk]' type-v2='filter' values='relevant' w='22000' x='45600' y='6176'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#ffffff' />
+            </zone-style>
+          </zone>
+          <zone h='7059' id='4' name="Patient Facts" w='98400' x='800' y='10735'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='7647' id='30' name="Patient Numbers" show-title='false' w='98400' x='800' y='17794'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='41177' id='5' name="Candidate Trials" w='98400' x='800' y='25441'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='32941' id='6' name="Trial Sites" w='98400' x='800' y='66618'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name="Overview">
+      <style>
+        <style-rule element='table'>
+          <format attr='background-color' value='#eef2f7' />
+        </style-rule>
+      </style>
+      <size maxheight='860' maxwidth='1280' minheight='860' minwidth='1280' />
+      <zones>
+        <zone h='100000' id='1' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='6047' id='2' type-v2='text' w='76000' x='0' y='0'>
+            <formatted-text><run bold='true' fontcolor='#ffffff' fontsize='20'>Hippocrates Trial Scout</run><run fontcolor='#9ec5f4' fontsize='14'>   |   Overview</run></formatted-text>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='10' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='3720' id='8' type-v2='text' w='76000' x='0' y='6047'>
+            <formatted-text><run fontcolor='#cde2fb' fontsize='10'>How screening narrows thousands of trials to a ranked shortlist per patient</run><run fontcolor='#86b6ef' fontsize='9' italic='true'>   ·   Synthetic patients · not medical advice</run></formatted-text>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='6' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='9767' id='10' type-v2='dashboard-object' w='12000' x='76000' y='0'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{0C6D7293-81CC-5732-87F9-42C446AD2376}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Trial Scout →</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontname='Tableau Bold' fontsize='10' />
+                <format attr='background-color' value='#2f6fc0' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='9767' id='11' type-v2='dashboard-object' w='12000' x='88000' y='0'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{D8D5A5AC-2560-58E9-A4F3-564733D4D88A}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Before / after →</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontname='Tableau Bold' fontsize='10' />
+                <format attr='background-color' value='#2f6fc0' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='13024' id='3' name="KPI Tiles" show-title='false' w='98400' x='800' y='9767'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='37442' id='4' name="Screening Funnel" w='48600' x='800' y='22791'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='39069' id='7' name="Trials by Phase" w='48600' x='800' y='60233'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='5349' id='5' name='Candidates by Tier' pane-specification-id='0' param='[federated.scout].[none:match_tier:nk]' type-v2='color' w='49800' x='49600' y='22791'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='71162' id='6' name="Candidates by Tier" w='49800' x='49600' y='28140'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name="Before and After">
+      <style>
+        <style-rule element='table'>
+          <format attr='background-color' value='#eef2f7' />
+        </style-rule>
+      </style>
+      <size maxheight='860' maxwidth='1280' minheight='860' minwidth='1280' />
+      <zones>
+        <zone h='100000' id='1' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='6047' id='2' type-v2='text' w='76000' x='0' y='0'>
+            <formatted-text><run bold='true' fontcolor='#ffffff' fontsize='20'>Hippocrates Trial Scout</run><run fontcolor='#9ec5f4' fontsize='14'>   |   Before and After</run></formatted-text>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='10' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='3720' id='8' type-v2='text' w='76000' x='0' y='6047'>
+            <formatted-text><run fontcolor='#cde2fb' fontsize='10'>The first matcher against this one, on the same patients and trials</run><run fontcolor='#86b6ef' fontsize='9' italic='true'>   ·   Synthetic patients · not medical advice</run></formatted-text>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='6' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='9767' id='10' type-v2='dashboard-object' w='12000' x='76000' y='0'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{0C6D7293-81CC-5732-87F9-42C446AD2376}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Trial Scout →</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontname='Tableau Bold' fontsize='10' />
+                <format attr='background-color' value='#2f6fc0' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='9767' id='11' type-v2='dashboard-object' w='12000' x='88000' y='0'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{2A6D107F-12FF-5C9A-B5E7-FF2102A4C089}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Overview →</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontname='Tableau Bold' fontsize='10' />
+                <format attr='background-color' value='#2f6fc0' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='margin' value='0' />
+              <format attr='padding' value='4' />
+              <format attr='background-color' value='#0f2b4c' />
+            </zone-style>
+          </zone>
+          <zone h='29070' id='4' name="Matches Compared" w='48600' x='800' y='9767'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='29070' id='5' name="Joinable Compared" w='49800' x='49600' y='9767'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='60465' id='6' name="Checks Table" w='48600' x='800' y='38837'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+          <zone h='60563' id='7' name="First Version Statuses" w='49800' x='49600' y='38837'>
+            <zone-style>
+              <format attr='margin' value='6' />
+              <format attr='padding' value='8' />
+              <format attr='background-color' value='#ffffff' />
+              <format attr='border-color' value='#d5deea' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+  <windows source-height='30'>
+    <window class='dashboard' maximized='true' name='Trial Scout'>
+      <viewpoints>
+        <viewpoint name='Patient Facts' />
+        <viewpoint name='Patient Numbers' />
+        <viewpoint name='Candidate Trials' />
+        <viewpoint name='Trial Sites' />
+      </viewpoints>
+      <active id='-1' />
+      <simple-id uuid='{0C6D7293-81CC-5732-87F9-42C446AD2376}' />
+    </window>
+    <window class='dashboard' name='Overview'>
+      <viewpoints>
+        <viewpoint name='KPI Tiles' />
+        <viewpoint name='Screening Funnel' />
+        <viewpoint name='Trials by Phase' />
+        <viewpoint name='Candidates by Tier' />
+      </viewpoints>
+      <active id='-1' />
+      <simple-id uuid='{2A6D107F-12FF-5C9A-B5E7-FF2102A4C089}' />
+    </window>
+    <window class='dashboard' name='Before and After'>
+      <viewpoints>
+        <viewpoint name='Matches Compared' />
+        <viewpoint name='Joinable Compared' />
+        <viewpoint name='Checks Table' />
+        <viewpoint name='First Version Statuses' />
+      </viewpoints>
+      <active id='-1' />
+      <simple-id uuid='{D8D5A5AC-2560-58E9-A4F3-564733D4D88A}' />
+    </window>
+    <window class='worksheet' name='Patient Facts'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Patient Numbers'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Candidate Trials'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Trial Sites'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='KPI Tiles'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Screening Funnel'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Trials by Phase'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Candidates by Tier'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Matches Compared'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Joinable Compared'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Checks Table'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='First Version Statuses'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+  </windows>
+</workbook>

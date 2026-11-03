@@ -1,0 +1,13 @@
+check,version,value
+Only trials a patient can still join,First version,No
+Only trials a patient can still join,Current version,Yes
+Registered age limits checked,First version,No
+Registered age limits checked,Current version,Yes
+"EGFR, IDH and MGMT conflicts excluded",First version,No
+"EGFR, IDH and MGMT conflicts excluded",Current version,Yes
+Site in the patient's country required,First version,No
+Site in the patient's country required,Current version,Yes
+"Ranked, with the reasons shown",First version,No
+"Ranked, with the reasons shown",Current version,Yes
+Automated tests,First version,None
+Automated tests,Current version,Yes
