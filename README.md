@@ -1,5 +1,17 @@
 # Hippocrates Analytics: Clinical Trial Matching
 
+<p>
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/pandas-data%20pipeline-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="pandas" />
+  <img src="https://img.shields.io/badge/Tableau%20Public-dashboards-E97627?style=for-the-badge&logo=tableau&logoColor=white" alt="Tableau Public" />
+  <img src="https://img.shields.io/badge/ClinicalTrials.gov-API%20v2-2F81F7?style=for-the-badge" alt="ClinicalTrials.gov API v2" />
+  <img src="https://img.shields.io/badge/HTML%20%2B%20JavaScript-dashboard-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML and JavaScript dashboard" />
+  <img src="https://img.shields.io/badge/tests-157%20passing-3FB950?style=for-the-badge&logo=pytest&logoColor=white" alt="157 tests passing" />
+  <a href="https://github.com/goofydynamite/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization/actions/workflows/tests.yml"><img src="https://github.com/goofydynamite/Hippocrates-Analytics-Clinical-Trial-Matching-Optimization/actions/workflows/tests.yml/badge.svg" alt="CI status" /></a>
+</p>
+
+**Built with:** Python (pandas, regex rules for eligibility text), the ClinicalTrials.gov API v2, Tableau Public (workbook and `.hyper` extracts generated from Python with `tableauhyperapi`), a self-contained HTML and JavaScript dashboard, and pytest with GitHub Actions.
+
 Hippocrates screens brain tumour patients against public ClinicalTrials.gov records and gives a clinician a short, ranked list of trials to review, with the reason for each match.
 
 **Live dashboards on Tableau Public:** [Trial Scout](https://public.tableau.com/app/profile/deepti.singh.kushwaha/viz/HippocratesTrialScout/TrialScout) · [Overview](https://public.tableau.com/app/profile/deepti.singh.kushwaha/viz/HippocratesTrialScout/Overview) · [Before and After](https://public.tableau.com/app/profile/deepti.singh.kushwaha/viz/HippocratesTrialScout/BeforeandAfter)
